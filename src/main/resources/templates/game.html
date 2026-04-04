@@ -1,91 +1,100 @@
 <!DOCTYPE html>
+<!-- xmlns:th=... を書くことで、「このHTMLファイルではThymeleaf（タイムリーフ）の機能（th:～）を使うよ」という宣言になります。  -->
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Text Adventure</title>
+    <!-- 
+       [解説] ここはCSSという「画面の見た目（デザイン）」を指定する場所です。
+       文字の大きさや色、背景のグラデーションなどはすべてここで調整しています。
+       （通常は別の .css ファイルに書くことが多いですが、今回は1つのファイルにまとめてわかりやすくしています）
+    -->
     <style>
         body {
-            background: linear-gradient(135deg, #1f1c2c, #928DAB);
-            color: #ffffff;
-            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #1f1c2c, #928DAB); /* 背景を斜めのグラデーションにしています */
+            color: #ffffff;                                        /* 文字色を白にしています */
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* 文字のフォント（種類）です */
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center; /* 画面の中央に配置するための魔法（Flexbox）です */
+            min-height: 100vh;                                     /* 画面の高さにぴったり合わせます */
         }
         .container {
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            background-color: rgba(0, 0, 0, 0.6); /* 枠の中の背景を少し黒く透過させています */
+            backdrop-filter: blur(10px);          /* 後ろの背景を少しぼやけさせます（すりガラス効果） */
+            border-radius: 15px;                 /* 角を少し丸くします */
+            padding: 40px;                       /* 枠の内側の余白です */
+            max-width: 600px; width: 90%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* 枠に影をつけて浮き上がらせます */
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
         h1 {
-            font-size: 2rem;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-align: center;
+            font-size: 2rem; margin-top: 0; margin-bottom: 20px; text-align: center;
             letter-spacing: 2px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px;
         }
         p.body-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 40px;
+            font-size: 1.2rem; line-height: 1.6; margin-bottom: 40px;
         }
         .choices-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            display: flex; flex-direction: column; gap: 15px; /* ボタン同士の隙間をあけます */
         }
         button.choice-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            padding: 15px 20px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
+            width: 100%; background: rgba(255, 255, 255, 0.1); color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px;
+            padding: 15px 20px; font-size: 1.1rem; cursor: pointer; /* マウスを乗せたら指のマークになります */
+            transition: all 0.3s ease; text-align: left; position: relative; overflow: hidden;
         }
         button.choice-btn:hover {
+            /* マウスが上に乗った時（hover）のアニメーションです。少し浮き上がって明るくなります */
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             border-color: rgba(255, 255, 255, 0.5);
         }
         button.choice-btn::before {
-            content: '>';
-            position: absolute;
-            right: 20px;
-            opacity: 0;
+            content: '>'; position: absolute; right: 20px; opacity: 0;
             transition: opacity 0.3s ease, right 0.3s ease;
         }
         button.choice-btn:hover::before {
-            opacity: 1;
-            right: 15px;
+            opacity: 1; right: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 th:text="${scenario.title}">Scenario Title</h1>
-        <p class="body-text" th:text="${scenario.body}">Scenario body text goes here...</p>
+        <!-- 
+           【超重要：Thymeleafの変数入れ込み】
+           th:text="${scenario.title}" と書くことで、
+           GameControllerの model.addAttribute("scenario", ...); で渡された「scenario（シナリオ）」の
+           中身から、さらに「.title（タイトル）」を取り出して画面に表示（上書き）します。
+           HTMLの中に直接「暗い森の入り口」と書かずに動的に表示できるすごい機能です！
+        -->
+        <h1 th:text="${scenario.title}">シナリオのタイトル（仮）</h1>
+        
+        <!-- ここには scenario の body（本文）を同じように埋め込みます -->
+        <p class="body-text" th:text="${scenario.body}">シナリオの本文がここに入ります...</p>
         
         <div class="choices-container">
+            <!-- 
+               【超重要：Thymeleafの繰り返し（ループ）処理】
+               th:each="choice : ${scenario.choices}" は、Javaのfor文のような働きをします！
+               「今回のシナリオに紐づいている複数の choices（選択肢のリスト）」を順番に取り出して、
+               ここにある <form> ～ </form> を選択肢の数だけまるごとコピーして並べてくれます。
+               変数 "choice" （左側）に、1つずつの選択肢情報が入ります。
+            -->
             <form th:each="choice : ${scenario.choices}" th:action="@{/play/choose}" method="post">
+                <!-- 
+                   ユーザーの目には見えない隠しボタン（type="hidden"）です。
+                   ユーザーがボタンを押したとき、コントローラーに「その選択肢のID番号」を伝えるために
+                   こっそり formsの送信内容として忍ばせています。（これを受け取るのが @RequestParam Long choiceId です）
+                -->
                 <input type="hidden" name="choiceId" th:value="${choice.id}" />
-                <button type="submit" class="choice-btn" th:text="${choice.label}">Choice</button>
+                
+                <!-- 
+                   実際のボタンです。テキストに choice.label（「逃げる」「戦う」などの文章）をセットします。
+                   type="submit" なので、押すと上記の action="@{/play/choose}" に向けてPOSTリクエストが飛びます！
+                -->
+                <button type="submit" class="choice-btn" th:text="${choice.label}">選択肢の文章</button>
             </form>
         </div>
     </div>

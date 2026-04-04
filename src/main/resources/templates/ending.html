@@ -3,108 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <title>Text Adventure - Ending</title>
+    <!-- デザイン（CSS）の設定。エンディングは少し雰囲気を変えて深い青のグラデーションにしています -->
     <style>
         body {
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #ffffff;
             font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
         .container {
-            background-color: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 50px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            border-radius: 20px; padding: 50px; max-width: 600px; width: 90%;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
-            animation: fadeIn 1.5s ease-out;
+            animation: fadeIn 1.5s ease-out; /* ふわっとフェードインしてくるアニメーションです */
         }
+        /* フェードインの動きの詳細を定義しています。下から上に少し上がりつつ透明から実体化します */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         h1 {
-            font-size: 2.5rem;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            letter-spacing: 2px;
+            font-size: 2.5rem; margin-top: 0; margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); letter-spacing: 2px;
         }
         p.body-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #ddd;
+            font-size: 1.2rem; line-height: 1.6; margin-bottom: 30px; color: #ddd;
         }
         .result-box {
-            background: rgba(0,0,0,0.4);
-            border-radius: 12px;
-            padding: 30px 20px;
-            margin-bottom: 40px;
-            border: 1px solid rgba(255,255,255,0.15);
-            position: relative;
-            overflow: hidden;
+            background: rgba(0,0,0,0.4); border-radius: 12px; padding: 30px 20px; margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;
         }
         .result-box::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(to right, #f2c94c, #f2994a);
         }
         .result-title {
-            font-size: 1.8rem;
-            color: #f2c94c;
-            margin-bottom: 15px;
-            font-weight: bold;
+            font-size: 1.8rem; color: #f2c94c; margin-bottom: 15px; font-weight: bold;
         }
         .result-desc {
-            font-size: 1.1rem;
-            color: #ecf0f1;
-            line-height: 1.5;
+            font-size: 1.1rem; color: #ecf0f1; line-height: 1.5;
         }
         .restart-btn {
             background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 15px 50px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,242,254,0.3);
+            color: white; border: none; border-radius: 30px; padding: 15px 50px;
+            font-size: 1.2rem; cursor: pointer; text-decoration: none; display: inline-block;
+            transition: all 0.3s ease; font-weight: bold; box-shadow: 0 5px 15px rgba(0,242,254,0.3);
         }
         .restart-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,242,254,0.5);
+            transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(0,242,254,0.5);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 th:text="${scenario.title}">Ending</h1>
-        <p class="body-text" th:text="${scenario.body}">Your journey ends here...</p>
+        <!-- エンディングのシナリオタイトルと本文です -->
+        <h1 th:text="${scenario.title}">エンディングタイトル</h1>
+        <p class="body-text" th:text="${scenario.body}">エンディングの本文がここに入ります...</p>
         
+        <!-- 
+           【超重要：ThymeleafのIF文（条件分岐）】
+           th:if="${topTrait != null}" は、「もし topTrait（コントローラーから渡された一番高い特性）が null じゃない（＝ある）なら、
+           この <div> の固まりを画面に表示する！」という指示です。
+           特性が何もない（選択肢を選ばなかったなど）場合は、HTMLごと存在しなかったことにしてくれます。
+        -->
         <div class="result-box" th:if="${topTrait != null}">
+            <!-- 
+               th:text="${'文字' + 変数}" のように書くことで、固定の文章と、
+               プログラムから渡された変数を合体（結合）して表示させることができます。
+            -->
             <div class="result-title" th:text="${'あなたの特性: ' + topTrait.name}">あなたの特性</div>
+            
+            <!-- 特性の解説文（description）を表示します -->
             <div class="result-desc" th:text="${topTrait.description}">性格の説明がここに入ります。</div>
+            
             <div style="margin-top: 20px; font-size: 0.95rem; color: #bbb;" th:text="${'獲得総ポイント: ' + totalPoint}">獲得総ポイント: 0</div>
         </div>
+
+        <!-- 
+           上の逆です。「もし topTrait が null（無い）なら、こっちを表示する」という分岐です。
+           if ～ else と同じような動きを作っています。
+        -->
         <div class="result-box" th:if="${topTrait == null}">
             <div class="result-title">特性が特定できませんでした</div>
             <div class="result-desc">あなたはどの道にも染まらない、または十分に経験を積まなかったようです。</div>
         </div>
 
+        <!-- 
+           th:href は、リンク先（URL）を安全に指定するための書き方です。
+           「もう一度プレイする」ボタンを押すと、一番最初の /play へ再度 GETアクセスをします。
+        -->
         <a th:href="@{/play}" class="restart-btn">もう一度プレイする</a>
     </div>
 </body>
