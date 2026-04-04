@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Adventure</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1f1c2c, #928DAB);
+            color: #ffffff;
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        h1 {
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+        }
+        p.body-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        button.choice-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        button.choice-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        button.choice-btn::before {
+            content: '>';
+            position: absolute;
+            right: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease, right 0.3s ease;
+        }
+        button.choice-btn:hover::before {
+            opacity: 1;
+            right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${scenario.title}">Scenario Title</h1>
+        <p class="body-text" th:text="${scenario.body}">Scenario body text goes here...</p>
+        
+        <div class="choices-container">
+            <form th:each="choice : ${scenario.choices}" th:action="@{/play/choose}" method="post">
+                <input type="hidden" name="choiceId" th:value="${choice.id}" />
+                <button type="submit" class="choice-btn" th:text="${choice.label}">Choice</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

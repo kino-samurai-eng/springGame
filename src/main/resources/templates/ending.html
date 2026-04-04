@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Adventure - Ending</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+        p.body-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+        .result-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(to right, #f2c94c, #f2994a);
+        }
+        .result-title {
+            font-size: 1.8rem;
+            color: #f2c94c;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .result-desc {
+            font-size: 1.1rem;
+            color: #ecf0f1;
+            line-height: 1.5;
+        }
+        .restart-btn {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,242,254,0.3);
+        }
+        .restart-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,242,254,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${scenario.title}">Ending</h1>
+        <p class="body-text" th:text="${scenario.body}">Your journey ends here...</p>
+        
+        <div class="result-box" th:if="${topTrait != null}">
+            <div class="result-title" th:text="${'あなたの特性: ' + topTrait.name}">あなたの特性</div>
+            <div class="result-desc" th:text="${topTrait.description}">性格の説明がここに入ります。</div>
+            <div style="margin-top: 20px; font-size: 0.95rem; color: #bbb;" th:text="${'獲得総ポイント: ' + totalPoint}">獲得総ポイント: 0</div>
+        </div>
+        <div class="result-box" th:if="${topTrait == null}">
+            <div class="result-title">特性が特定できませんでした</div>
+            <div class="result-desc">あなたはどの道にも染まらない、または十分に経験を積まなかったようです。</div>
+        </div>
+
+        <a th:href="@{/play}" class="restart-btn">もう一度プレイする</a>
+    </div>
+</body>
+</html>
