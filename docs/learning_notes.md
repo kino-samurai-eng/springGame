@@ -14,6 +14,26 @@
   * `@GeneratedValue(strategy = GenerationType.IDENTITY)`：IDの番号をデータベース側で自動で連番（1, 2, 3...）にするための指示です。
 * **`@Data`**: Lombokの機能で、裏側で `getter` / `setter` などを自動生成し、コードをスッキリさせます。
 
+### 📌 【重要】 @Column はいつ付けるべきか？
+JPAは非常に賢く、「Javaの変数名（例：`username`）」と「DBの列名（例：`username`）」が一致していれば**何も書かなくても自動で紐づけてくれます**。そのため、すべての変数に `@Column` を付ける必要はありません。
+
+**ただし、以下のような特別な指示を出したい時だけ `@Column` を使用（目印として明記）します。**
+
+1. **Javaの変数名と、データベースの列名が「全く違う名前」のとき**
+   ```java
+   // 例：Java側では「userId」だが、DB側では「account_id」という名前になっている場合
+   @Column(name = "account_id")
+   private Long userId;
+   ```
+2. **データベース独自のデフォルト値や機能を強制したいとき**
+   ```java
+   @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+   ```
+3. **Javaから特定の項目を保存・更新させないようにしたいとき**
+   ```java
+   @Column(insertable = false, updatable = false)
+   ```
+
 ---
 
 ## 2. データベースのリレーション（関係性）について
