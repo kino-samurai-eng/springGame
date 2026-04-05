@@ -34,18 +34,10 @@ public class User {
     private Long currentScenarioId;
 
     // このユーザーがいつアカウントを作ったか（レコードが作られたか）の時刻を保存します。
+    @Column(name = "created_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    /**
-     * @PrePersist という難しそうなアノテーションは、
-     * 「このデータが初めてデータベースに保存（Save）される【直前】に、自動でこのメソッドの中身を実行してね！」
-     * という便利な機能（ライフサイクルメソッド）です。
-     * 
-     * コビトさんが裏でこっそり、保存の瞬間に今の現在時刻を `createdAt` 変数にセットしてくれるイメージです。
-     * いちいち自分で時刻をセットするコードを書かなくて良くなります！
-     */
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
+    // レコードが更新された時刻を保存します。
+    @Column(name = "updated_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
 }

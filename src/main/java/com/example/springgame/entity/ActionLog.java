@@ -27,16 +27,6 @@ public class ActionLog {
     private int points;
 
     // 「いつ（何時何分何秒に）このログが発生したか」タイムスタンプ（時間記録）の役目を与えます。
+    @Column(name = "logged_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime loggedAt;
-
-    /**
-     * @PrePersist ライフサイクルメソッドです。
-     * この ActionLog がデータベースに新しく保存された（INSERTされた）瞬間に、
-     * Javaが自動的に `LocalDateTime.now()` を呼び出して、保存した現在時刻をこの `loggedAt` 変数に格納してくれます。
-     * この機能のおかげで、保存前に手動で時間をセットし忘れて時間が空っぽになっちゃう！というエラー（事故）を防げます。
-     */
-    @PrePersist
-    public void prePersist() {
-        this.loggedAt = LocalDateTime.now();
-    }
 }

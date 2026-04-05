@@ -2,6 +2,7 @@ package com.example.springgame.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 /**
  * 性格特性（Trait）を表すエンティティです。
@@ -22,4 +23,10 @@ public class Trait {
     // 特性の説明（例：「危険を恐れずに立ち向かう性格です」）が記録されます。
     // エンディング画面でプレイヤーに表示してあげるための情報です。
     private String description;
+
+    @Column(name = "created_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
 }

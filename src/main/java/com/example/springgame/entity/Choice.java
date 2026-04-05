@@ -2,6 +2,7 @@ package com.example.springgame.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 /**
  * シナリオ内での「選択肢」を表すエンティティ（データベースのテーブルと対応するクラス）です。
@@ -39,4 +40,10 @@ public class Choice {
 
     // 「その性格（特性）が、具体的に何点上がるか（ポイント）」です。
     private int traitPoint;
+
+    @Column(name = "created_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", insertable = false, updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
 }
